@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #7f8c8d;
+  background-color: #1abc9c;
   font-family: "Nunito", sans-serif;
 }
 
@@ -23,6 +23,7 @@ body {
 .br {
   display: block;
   padding: 7px;
+  border: 7px solid #34495e;
 }
 .ingre {
   margin-top: 7px;
@@ -31,10 +32,10 @@ body {
 .recipe {
   box-shadow: 2px solid black;
   width: 450px;
-  height: 400px;
+
   padding: 10px;
   word-wrap: break-word;
-  background-color: #f39c12;
+  background-color: #16a085;
 }
 
 .ingredients {
@@ -54,12 +55,15 @@ body {
 #search-btn {
   padding: 5px;
   width: 100px;
+  margin: 4px;
+  border: 5px solid #34495e;
 }
+
 .image {
-  width: 200px;
-  height: 100px;
+  width: 400px;
+  height: 300px;
   border-radius: 10px;
-  justify-self: center;
+
   display: block;
   margin-top: 10px;
 }

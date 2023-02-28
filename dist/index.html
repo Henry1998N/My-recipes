@@ -15,9 +15,12 @@
       type="text"
       placeholder="which ingredient in your mind?"
     />
-    <span class="br"> <input type="checkbox" id="gluten" /> gluten free</span>
-    <span class="br"> <input type="checkbox" id="dairy" /> dairy free</span>
-
+    <div class="br">
+      <span class="checkbox">
+        <input type="checkbox" id="gluten" /> gluten free</span
+      >
+      <span> <input type="checkbox" id="dairy" /> dairy free</span>
+    </div>
     <button id="search-btn">search</button>
     <div id="recipes-container" class="recipes-container"></div>
     <script id="recipes-template" type="text/x-handlebars-template">
