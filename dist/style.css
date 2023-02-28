@@ -20,11 +20,14 @@ body {
     "i i i"
     "i i i";
 }
-
+.br {
+  display: block;
+  padding: 7px;
+}
 .recipe {
   box-shadow: 2px solid black;
-  width: 400px;
-  height: 350px;
+  width: 450px;
+  height: 400px;
   padding: 10px;
   background-color: #f39c12;
 }
@@ -48,8 +51,8 @@ body {
   width: 100px;
 }
 .image {
-  width: 100px;
-  height: 40px;
+  width: 200px;
+  height: 100px;
   border-radius: 10px;
   justify-self: center;
   display: block;
