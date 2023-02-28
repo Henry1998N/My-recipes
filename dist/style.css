@@ -24,11 +24,16 @@ body {
   display: block;
   padding: 7px;
 }
+.ingre {
+  margin-top: 7px;
+  padding: 5px;
+}
 .recipe {
   box-shadow: 2px solid black;
   width: 450px;
   height: 400px;
   padding: 10px;
+  word-wrap: break-word;
   background-color: #f39c12;
 }
 
