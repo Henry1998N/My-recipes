@@ -23,5 +23,7 @@ $("#search-btn").on("click", () => {
 });
 
 $("#recipes-container").on("click", ".image", function () {
-  alert($(this).data().id);
+  let ingredients = $(this).data().id;
+  let ingredient = ingredients.slice(0, ingredients.indexOf(","));
+  alert(ingredient);
 });
