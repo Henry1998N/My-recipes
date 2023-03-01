@@ -8,4 +8,10 @@ class Render {
     let newHTML = template({ data: this.data });
     $(".recipes-container").empty().append(newHTML);
   }
+  renderFavRecipes() {
+    const source = $("#favourites-template").html();
+    const template = Handlebars.compile(source);
+    let newHTML = template({ data: this.data });
+    $(".recipes-container").empty().append(newHTML);
+  }
 }

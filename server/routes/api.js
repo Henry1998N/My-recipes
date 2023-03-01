@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
+const favourites = { favouritesArr: [] };
 const glutenIngredients = ["Flour", "Bread", "spaghetti", "Biscuits", "Beer"];
 const dairyIngredients = [
   "Cream",
@@ -13,6 +14,7 @@ const dairyIngredients = [
   "Custard",
   "Cream Cheese",
 ];
+
 const getglutenFreeRecipes = function (filterdArr) {
   let glutenFreeArr = [];
   for (let recipe of filterdArr) {
@@ -63,6 +65,35 @@ const whichDataToSend = function (queryString, res, filterdArr) {
     res.send({ filterdArr });
   }
 };
+router.post("/recipes/favourite", (req, res) => {
+  let recipeId = req.body;
+  axios
+    .get(
+      `https://recipes-goodness-elevation.herokuapp.com/recipes/id/${recipeId.mealId}`
+    )
+    .then((response) => {
+      let recipe = {
+        mealId: response.data.idMeal,
+        title: response.data.title,
+        href: response.data.href,
+        ingredients: response.data.ingredients,
+        thumbnail: response.data.thumbnail,
+      };
+      let isExist = favourites.favouritesArr.some(
+        (f) => f.mealId === recipe.mealId
+      );
+      if (!isExist) {
+        favourites.favouritesArr.push(recipe);
+
+        res.status(201).send({ ok: `created` }).end();
+      } else {
+        res.status(409).send({ error: `recipe already exists` }).end();
+      }
+    });
+});
+router.get("/recipes/favourite", (req, res) => {
+  res.send(favourites);
+});
 router.get("/recipes/:ingredient", (req, res) => {
   let ingredient = req.params.ingredient;
   let queryString = req.query;

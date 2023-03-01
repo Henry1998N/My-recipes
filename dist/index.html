@@ -4,46 +4,74 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>My Recipes</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="./jquery/dist/jquery.js"></script>
     <script src="./handlebars/dist/handlebars.js"></script>
   </head>
   <body>
-    <input
-      id="ingredient-input"
-      type="text"
-      placeholder="which ingredient in your mind?"
-    />
-    <div class="br">
-      <span class="checkbox">
-        <input type="checkbox" id="gluten" /> gluten free</span
-      >
-      <span> <input type="checkbox" id="dairy" /> dairy free</span>
-    </div>
-    <button id="search-btn">search</button>
-    <div id="recipes-container" class="recipes-container"></div>
-    <script id="recipes-template" type="text/x-handlebars-template">
-      {{#each data.filterdArr}}
-        <div class="recipe">
-          <a href="{{href}}">{{title}}</a>
-          <div>
-
-            <img
-              data-id="{{ingredients}}"
-              class="image"
-              src="{{thumbnail}}"
-            /></div>
-          <div class="ingre">ingredients</div>
-          <ul class="ingredients">{{#each ingredients}}
-              <li class="ingredient" data-name="{{this}}">{{this}}</li>
-            {{/each}}
-          </ul>
-
+    <div class="container">
+      <div class="headContainer">
+        <input
+          id="ingredient-input"
+          type="text"
+          placeholder="which ingredient in your mind?"
+        />
+        <div class="br">
+          <span class="checkbox">
+            <input type="checkbox" id="gluten" /> gluten free</span
+          >
+          <span> <input type="checkbox" id="dairy" /> dairy free</span>
         </div>
-      {{/each}}
-    </script>
-    <script src="rendrer.js"></script>
-    <script src="main.js"></script>
+        <button id="search-btn">search</button>
+        <button id="fav" class="fav">favourites</button>
+      </div>
+      <div id="recipes-container" class="recipes-container"></div>
+      <script id="recipes-template" type="text/x-handlebars-template">
+        {{#each data.filterdArr}}
+          <div class="recipe">
+            <a href="{{href}}">{{title}}</a>
+            <div>
+
+              <img
+                data-id="{{ingredients}}"
+                class="image"
+                src="{{thumbnail}}"
+              /></div>
+            <div data-id="{{idMeal}}" class="addToFav"><button
+                class="addToFavB"
+              >add to favourites</button></div>
+            <div class="ingre">ingredients</div>
+            <ul class="ingredients">{{#each ingredients}}
+                <li class="ingredient" data-name="{{this}}">{{this}}</li>
+              {{/each}}
+            </ul>
+
+          </div>
+        {{/each}}
+      </script>
+      <script id="favourites-template" type="text/x-handlebars-template">
+        {{#each data.favouritesArr}}
+          <div class="recipe">
+            <a href="{{href}}">{{title}}</a>
+            <div>
+
+              <img
+                data-id="{{ingredients}}"
+                class="image"
+                src="{{thumbnail}}"
+              /></div>
+            <div class="ingre">ingredients</div>
+            <ul class="ingredients">{{#each ingredients}}
+                <li class="ingredient" data-name="{{this}}">{{this}}</li>
+              {{/each}}
+            </ul>
+
+          </div>
+        {{/each}}
+      </script>
+      <script src="rendrer.js"></script>
+      <script src="main.js"></script>
+    </div>
   </body>
 </html>

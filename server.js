@@ -4,19 +4,8 @@ const path = require("path");
 const axios = require("axios");
 const PORT = 3000;
 const api = require("./server/routes/api");
-const glutenIngredients = ["Flour", "Bread", "spaghetti", "Biscuits", "Beer"];
-const dairyIngredients = [
-  "Cream",
-  "Cheese",
-  "Milk",
-  "Butter",
-  "Creme",
-  "Ricotta",
-  "Mozzarella",
-  "Custard",
-  "Cream Cheese",
-];
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.use(express.static(path.join(__dirname, "node_modules")));

@@ -21,9 +21,26 @@ $("#search-btn").on("click", () => {
   $("#gluten").prop("checked", false);
   $("#dairy").prop("checked", false);
 });
+$("#recipes-container").on("click", ".addToFav", function () {
+  let mealId = $(this).data().id;
+  $.post("/recipes/favourite", { mealId: mealId })
+    .then((response) => {
+      alert("added new recipe to favourites");
+    })
+    .catch((err) => {
+      alert("you already added this recipe to favourites");
+    });
+});
 
 $("#recipes-container").on("click", ".image", function () {
   let ingredients = $(this).data().id;
   let ingredient = ingredients.slice(0, ingredients.indexOf(","));
   alert(ingredient);
+});
+
+$(".headContainer").on("click", ".fav", function () {
+  $.get("/recipes/favourite").then((data) => {
+    let renderer = new Render(data);
+    renderer.renderFavRecipes();
+  });
 });
