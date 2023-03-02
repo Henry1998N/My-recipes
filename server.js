@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, "dist")));
 app.use(express.static(path.join(__dirname, "node_modules")));
 
 app.use("/", api);
+
 app.listen(PORT, () => {
   console.log(`Running server on port ${PORT}`);
 });

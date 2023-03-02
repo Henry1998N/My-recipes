@@ -8,6 +8,10 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="./jquery/dist/jquery.js"></script>
     <script src="./handlebars/dist/handlebars.js"></script>
+    <script
+      src="https://kit.fontawesome.com/10078cfd09.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div class="container">
@@ -53,7 +57,13 @@
       <script id="favourites-template" type="text/x-handlebars-template">
         {{#each data.favouritesArr}}
           <div class="recipe">
+
             <a href="{{href}}">{{title}}</a>
+            <span>
+              &nbsp;&nbsp;&nbsp;&nbsp;<i
+                class="fa-solid fa-trash li"
+                data-id="{{mealId}}"
+              ></i></span>
             <div>
 
               <img

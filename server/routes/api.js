@@ -66,6 +66,7 @@ const whichDataToSend = function (queryString, res, filterdArr) {
   }
 };
 router.post("/recipes/favourite", (req, res) => {
+  /// todo : favouriteRecipes|| favourites
   let recipeId = req.body;
   axios
     .get(
@@ -82,16 +83,20 @@ router.post("/recipes/favourite", (req, res) => {
       let isExist = favourites.favouritesArr.some(
         (f) => f.mealId === recipe.mealId
       );
+
       if (!isExist) {
         favourites.favouritesArr.push(recipe);
 
         res.status(201).send({ ok: `created` }).end();
+        return;
       } else {
         res.status(409).send({ error: `recipe already exists` }).end();
+        return;
       }
     });
 });
 router.get("/recipes/favourite", (req, res) => {
+  console.log(favourites);
   res.send(favourites);
 });
 router.get("/recipes/:ingredient", (req, res) => {
@@ -114,6 +119,26 @@ router.get("/recipes/:ingredient", (req, res) => {
       });
       whichDataToSend(queryString, res, filterdArr);
     });
+});
+
+router.delete("/recipes/favourite/:id", (req, res) => {
+  let recipeId = req.params.id;
+  let indexToDelete = -1;
+  console.log(favourites.favouritesArr);
+  for (let index in favourites.favouritesArr) {
+    let arr = favourites.favouritesArr;
+    if (arr[index].mealId === recipeId) {
+      indexToDelete = index;
+    }
+  }
+  if (indexToDelete != -1) {
+    favourites.favouritesArr.splice(indexToDelete, 1);
+    res.status(204).end();
+    return;
+  } else {
+    res.status(409).end();
+    return;
+  }
 });
 
 module.exports = router;

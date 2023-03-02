@@ -37,10 +37,23 @@ $("#recipes-container").on("click", ".image", function () {
   let ingredient = ingredients.slice(0, ingredients.indexOf(","));
   alert(ingredient);
 });
-
-$(".headContainer").on("click", ".fav", function () {
+const getFavouritesRecipes = function () {
   $.get("/recipes/favourite").then((data) => {
     let renderer = new Render(data);
     renderer.renderFavRecipes();
+  });
+};
+$(".headContainer").on("click", ".fav", function () {
+  getFavouritesRecipes();
+});
+$("#recipes-container").on("click", ".li", function () {
+  favRecipeId = $(this).data().id;
+  $.ajax({
+    url: `/recipes/favourite/${favRecipeId}`,
+    type: "DELETE",
+    success: function (result) {
+      alert("deleted");
+      getFavouritesRecipes();
+    },
   });
 });
