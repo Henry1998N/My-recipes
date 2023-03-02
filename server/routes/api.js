@@ -19,9 +19,11 @@ const getglutenFreeRecipes = function (filterdArr) {
   let glutenFreeArr = [];
   for (let recipe of filterdArr) {
     let isExist = false;
-    for (let ingredient of recipe.ingredients) {
+    let recipeIngredients = toLowerCaseIngredients(recipe.ingredients);
+
+    for (let ingredient of recipeIngredients) {
       for (let glutenIngredient of glutenIngredients) {
-        if (ingredient == glutenIngredient) {
+        if (ingredient.includes(glutenIngredient.toLowerCase())) {
           isExist = true;
         }
       }
@@ -30,18 +32,28 @@ const getglutenFreeRecipes = function (filterdArr) {
   }
   return { filterdArr: glutenFreeArr };
 };
+const toLowerCaseIngredients = function (arr) {
+  let arrLoweredCase = [];
+  arr.forEach((r) => {
+    arrLoweredCase.push(r.toLowerCase());
+  });
+  return arrLoweredCase;
+};
 const getDairyFreeRecipes = function (filterdArr) {
   let dairyFreeArr = [];
   for (let recipe of filterdArr) {
-    let isExist = false;
-    for (let ingredient of recipe.ingredients) {
+    let isExistinIngredint = false;
+    let recipeIngredients = toLowerCaseIngredients(recipe.ingredients);
+    for (let ingredient of recipeIngredients) {
       for (let dairyIngredient of dairyIngredients) {
-        if (ingredient == dairyIngredient) {
-          isExist = true;
+        if (ingredient.includes(dairyIngredient.toLowerCase())) {
+          isExistinIngredint = true;
         }
       }
     }
-    if (!isExist) dairyFreeArr.push(recipe);
+    if (!isExistinIngredint) {
+      dairyFreeArr.push(recipe);
+    }
   }
   return { filterdArr: dairyFreeArr };
 };
@@ -54,13 +66,21 @@ const whichDataToSend = function (queryString, res, filterdArr) {
         getglutenFreeRecipes(filterdArr).filterdArr
       );
       res.send(filterdByDairyAndGluten);
-    } else res.send({ filterdArr });
+    } else {
+      res.send({ filterdArr });
+    }
   } else if (glutenFree != undefined) {
-    if (glutenFree === "true") res.send(getglutenFreeRecipes(filterdArr));
-    else res.send({ filterdArr });
+    if (glutenFree === "true") {
+      res.send(getglutenFreeRecipes(filterdArr));
+    } else {
+      res.send({ filterdArr });
+    }
   } else if (dairyFree != undefined) {
-    if (dairyFree === "true") res.send(getDairyFreeRecipes(filterdArr));
-    else res.send({ filterdArr });
+    if (dairyFree === "true") {
+      res.send(getDairyFreeRecipes(filterdArr));
+    } else {
+      res.send({ filterdArr });
+    }
   } else {
     res.send({ filterdArr });
   }
@@ -86,7 +106,6 @@ router.post("/recipes/favourite", (req, res) => {
 
       if (!isExist) {
         favourites.favouritesArr.push(recipe);
-
         res.status(201).send({ ok: `created` }).end();
         return;
       } else {
@@ -96,7 +115,6 @@ router.post("/recipes/favourite", (req, res) => {
     });
 });
 router.get("/recipes/favourite", (req, res) => {
-  console.log(favourites);
   res.send(favourites);
 });
 router.get("/recipes/:ingredient", (req, res) => {
