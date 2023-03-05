@@ -21,8 +21,6 @@ $("#search-btn").on("click", () => {
     renderer.renderRecipes();
   });
   $("#ingredient-input").val("");
-  // $("#gluten").prop("checked", false);
-  // $("#dairy").prop("checked", false);
 });
 $(".paginations").on("click", "#next", () => {
   this.limit += 4;
@@ -36,15 +34,12 @@ $(".paginations").on("click", "#next", () => {
     }
   });
   $("#ingredient-input").val("");
-  // $("#gluten").prop("checked", false);
-  // $("#dairy").prop("checked", false);
 });
 $(".paginations").on("click", "#back", () => {
   if (this.limit > 0) {
     this.limit -= 4;
   } else {
     alert("this is the first page");
-    // $("#back").attr("disabled", true);
   }
   let route = whichCheckBoxesIsChecked(this.limit, this.ingredient);
   $.get(route).then((data) => {
@@ -52,8 +47,6 @@ $(".paginations").on("click", "#back", () => {
     renderer.renderRecipes();
   });
   $("#ingredient-input").val("");
-  // $("#gluten").prop("checked", false);
-  // $("#dairy").prop("checked", false);
 });
 $("#recipes-container").on("click", ".addToFav", function () {
   let mealId = $(this).data().id;
