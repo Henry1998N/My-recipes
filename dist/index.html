@@ -29,6 +29,7 @@
         </div>
         <button id="search-btn">search</button>
         <button id="fav" class="fav">favourites</button>
+        <br />
       </div>
       <div id="recipes-container" class="recipes-container"></div>
       <script id="recipes-template" type="text/x-handlebars-template">
@@ -80,6 +81,10 @@
           </div>
         {{/each}}
       </script>
+      <div class="paginations">
+        <button class="pagination" id="back">back</button>
+        <button class="pagination" id="next">next</button>
+      </div>
       <script src="rendrer.js"></script>
       <script src="main.js"></script>
     </div>

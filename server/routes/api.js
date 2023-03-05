@@ -60,29 +60,38 @@ const getDairyFreeRecipes = function (filterdArr) {
 const whichDataToSend = function (queryString, res, filterdArr) {
   let glutenFree = queryString?.gluten;
   let dairyFree = queryString?.dairy;
+  let limit = queryString?.limit;
   if (glutenFree != undefined && dairyFree != undefined) {
     if (glutenFree === "true" && dairyFree === "true") {
       let filterdByDairyAndGluten = getDairyFreeRecipes(
         getglutenFreeRecipes(filterdArr).filterdArr
       );
-      res.send(filterdByDairyAndGluten);
+      let limitedArr = [...filterdByDairyAndGluten.filterdArr];
+      limitedArr = limitedArr.splice(limit, 4);
+      res.send({ filterdArr: limitedArr });
     } else {
       res.send({ filterdArr });
     }
   } else if (glutenFree != undefined) {
     if (glutenFree === "true") {
-      res.send(getglutenFreeRecipes(filterdArr));
+      let limitedArr = [...getglutenFreeRecipes(filterdArr).filterdArr];
+      limitedArr = limitedArr.splice(limit, 4);
+      res.send({ filterdArr: limitedArr });
     } else {
       res.send({ filterdArr });
     }
   } else if (dairyFree != undefined) {
     if (dairyFree === "true") {
-      res.send(getDairyFreeRecipes(filterdArr));
+      let limitedArr = [...getDairyFreeRecipes(filterdArr).filterdArr];
+      limitedArr = limitedArr.splice(limit, 4);
+      res.send({ filterdArr: limitedArr });
     } else {
       res.send({ filterdArr });
     }
   } else {
-    res.send({ filterdArr });
+    let limitedArr = [...filterdArr];
+    limitedArr = limitedArr.splice(limit, 4);
+    res.send({ filterdArr: limitedArr });
   }
 };
 router.post("/recipes/favourite", (req, res) => {
