@@ -1,16 +1,14 @@
 this.limit = 0;
 this.ingredient = "";
 const whichCheckBoxesIsChecked = function (limit, ingredient) {
-  if (ingredient != "")
-    if ($("#gluten").is(":checked") && $("#dairy").is(":checked")) {
-      return `/recipes/${ingredient}?gluten=true&dairy=true&limit=${limit}`;
-    } else if ($("#gluten").is(":checked")) {
-      return `/recipes/${ingredient}?gluten=true&limit=${limit}`;
-    } else if ($("#dairy").is(":checked")) {
-      return `/recipes/${ingredient}?dairy=true&limit=${limit}`;
-    } else {
-      return `/recipes/${ingredient}?limit=${limit}`;
-    }
+  let queryString = "";
+  if ($("#gluten").is(":checked")) {
+    queryString += "gluten=true";
+  }
+  if ($("#dairy").is(":checked")) {
+    queryString += "&dairy=true";
+  }
+  return `/recipes/${ingredient}?${queryString}&limit=${limit}`;
 };
 $("#search-btn").on("click", () => {
   this.ingredient = $("#ingredient-input").val();

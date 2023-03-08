@@ -1,37 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const favourites = { favouritesArr: [] };
-const glutenIngredients = ["Flour", "Bread", "spaghetti", "Biscuits", "Beer"];
-const dairyIngredients = [
-  "Cream",
-  "Cheese",
-  "Milk",
-  "Butter",
-  "Creme",
-  "Ricotta",
-  "Mozzarella",
-  "Custard",
-  "Cream Cheese",
-];
-
-const getglutenFreeRecipes = function (filterdArr) {
-  let glutenFreeArr = [];
-  for (let recipe of filterdArr) {
-    let isExist = false;
-    let recipeIngredients = toLowerCaseIngredients(recipe.ingredients);
-
-    for (let ingredient of recipeIngredients) {
-      for (let glutenIngredient of glutenIngredients) {
-        if (ingredient.includes(glutenIngredient.toLowerCase())) {
-          isExist = true;
-        }
-      }
-    }
-    if (!isExist) glutenFreeArr.push(recipe);
-  }
-  return { filterdArr: glutenFreeArr };
-};
+const consts = require("./consts");
 const toLowerCaseIngredients = function (arr) {
   let arrLoweredCase = [];
   arr.forEach((r) => {
@@ -39,60 +9,59 @@ const toLowerCaseIngredients = function (arr) {
   });
   return arrLoweredCase;
 };
-const getDairyFreeRecipes = function (filterdArr) {
-  let dairyFreeArr = [];
-  for (let recipe of filterdArr) {
-    let isExistinIngredint = false;
-    let recipeIngredients = toLowerCaseIngredients(recipe.ingredients);
-    for (let ingredient of recipeIngredients) {
-      for (let dairyIngredient of dairyIngredients) {
-        if (ingredient.includes(dairyIngredient.toLowerCase())) {
-          isExistinIngredint = true;
-        }
-      }
-    }
-    if (!isExistinIngredint) {
-      dairyFreeArr.push(recipe);
+const getSensitiveFreeRecipes = function (recipes, sensitiveIngredients) {
+  let unSensitiveRecipes = [];
+
+  for (let recipe of recipes) {
+    let isRecipeSensitive = isSensitiveIngredients(
+      recipe.ingredients,
+      sensitiveIngredients
+    );
+    if (!isRecipeSensitive) {
+      unSensitiveRecipes.push(recipe);
     }
   }
-  return { filterdArr: dairyFreeArr };
+  return unSensitiveRecipes;
 };
-const whichDataToSend = function (queryString, res, filterdArr) {
+const isSensitiveIngredients = function (
+  recipeIngredients,
+  sensitiveIngredients
+) {
+  recipeIngredients = toLowerCaseIngredients(recipeIngredients);
+  sensitiveIngredients = toLowerCaseIngredients(sensitiveIngredients);
+  for (let ingredient of recipeIngredients) {
+    for (let dairyIngredient of sensitiveIngredients) {
+      if (ingredient.includes(dairyIngredient)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+const sendFilteredRecipes = function (queryString, res, filterdArr) {
   let glutenFree = queryString?.gluten;
   let dairyFree = queryString?.dairy;
   let limit = queryString?.limit;
-  if (glutenFree != undefined && dairyFree != undefined) {
-    if (glutenFree === "true" && dairyFree === "true") {
-      let filterdByDairyAndGluten = getDairyFreeRecipes(
-        getglutenFreeRecipes(filterdArr).filterdArr
-      );
-      let limitedArr = [...filterdByDairyAndGluten.filterdArr];
-      limitedArr = limitedArr.splice(limit, 4);
-      res.send({ filterdArr: limitedArr });
-    } else {
-      res.send({ filterdArr });
-    }
-  } else if (glutenFree != undefined) {
-    if (glutenFree === "true") {
-      let limitedArr = [...getglutenFreeRecipes(filterdArr).filterdArr];
-      limitedArr = limitedArr.splice(limit, 4);
-      res.send({ filterdArr: limitedArr });
-    } else {
-      res.send({ filterdArr });
-    }
-  } else if (dairyFree != undefined) {
-    if (dairyFree === "true") {
-      let limitedArr = [...getDairyFreeRecipes(filterdArr).filterdArr];
-      limitedArr = limitedArr.splice(limit, 4);
-      res.send({ filterdArr: limitedArr });
-    } else {
-      res.send({ filterdArr });
-    }
-  } else {
-    let limitedArr = [...filterdArr];
-    limitedArr = limitedArr.splice(limit, 4);
-    res.send({ filterdArr: limitedArr });
+  let filteredRecipes = [];
+  if (glutenFree === "true") {
+    filteredRecipes = getSensitiveFreeRecipes(
+      filterdArr,
+      consts.glutenIngredients
+    );
   }
+
+  if (dairyFree === "true") {
+    filteredRecipes =
+      filteredRecipes.length > 0
+        ? getSensitiveFreeRecipes(filteredRecipes, consts.dairyIngredients)
+        : getSensitiveFreeRecipes(filterdArr, consts.dairyIngredients);
+  }
+  if (filteredRecipes.length == 0) {
+    res.send({ filterdArr: filterdArr.splice(limit, consts.magicNum) });
+    return;
+  }
+  res.send({ filterdArr: filteredRecipes.splice(limit, consts.magicNum) });
 };
 router.post("/recipes/favourite", (req, res) => {
   /// todo : favouriteRecipes|| favourites
@@ -109,12 +78,12 @@ router.post("/recipes/favourite", (req, res) => {
         ingredients: response.data.ingredients,
         thumbnail: response.data.thumbnail,
       };
-      let isExist = favourites.favouritesArr.some(
+      let isExist = consts.favourites.favouritesArr.some(
         (f) => f.mealId === recipe.mealId
       );
 
       if (!isExist) {
-        favourites.favouritesArr.push(recipe);
+        consts.favourites.favouritesArr.push(recipe);
         res.status(201).send({ ok: `created` }).end();
         return;
       } else {
@@ -124,7 +93,7 @@ router.post("/recipes/favourite", (req, res) => {
     });
 });
 router.get("/recipes/favourite", (req, res) => {
-  res.send(favourites);
+  res.send(consts.favourites);
 });
 router.get("/recipes/:ingredient", (req, res) => {
   let ingredient = req.params.ingredient;
@@ -144,22 +113,21 @@ router.get("/recipes/:ingredient", (req, res) => {
           href: r.href,
         };
       });
-      whichDataToSend(queryString, res, filterdArr);
+      sendFilteredRecipes(queryString, res, filterdArr);
     });
 });
 
 router.delete("/recipes/favourite/:id", (req, res) => {
   let recipeId = req.params.id;
   let indexToDelete = -1;
-  console.log(favourites.favouritesArr);
-  for (let index in favourites.favouritesArr) {
-    let arr = favourites.favouritesArr;
+  for (let index in consts.favourites.favouritesArr) {
+    let arr = consts.favourites.favouritesArr;
     if (arr[index].mealId === recipeId) {
       indexToDelete = index;
     }
   }
   if (indexToDelete != -1) {
-    favourites.favouritesArr.splice(indexToDelete, 1);
+    consts.favourites.favouritesArr.splice(indexToDelete, 1);
     res.status(204).end();
     return;
   } else {
